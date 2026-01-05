@@ -45,12 +45,13 @@ get_tool_cmd() {
 }
 
 download_release() {
-  local version filename url canonical_name platform arch
+  local version filename suffix url platform arch
   version="$1"
   filename="$2"
+  suffix="$3"
   tool_cmd="$(get_tool_cmd "$version")"
   platform="$(uname -s | tr '[:upper:]' '[:lower:]')"
-  arch="$(uname -m)"
+  arch="${ASDF_NATS_ARCH-$(uname -m)}"
 
   case "$arch" in
   x86_64)
@@ -58,10 +59,13 @@ download_release() {
     ;;
   esac
 
-  url="$GH_REPO/releases/download/v${version}/${tool_cmd}-v${version}-${platform}-${arch}.zip"
+  url="$GH_REPO/releases/download/v${version}/${tool_cmd}-v${version}-${platform}-${arch}${suffix}"
 
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  if ! curl "${curl_opts[@]}" -o "$filename" -C - "${url}"; then
+    echo "Could not download ${url}"
+    return 1
+  fi
 }
 
 install_version() {

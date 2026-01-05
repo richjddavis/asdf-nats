@@ -16,7 +16,7 @@
 
 # Dependencies
 
-- `bash`, `curl`, `unzip`: generic POSIX utilities.
+- `bash`, `curl`, `unzip`, `tar`: generic POSIX utilities.
 
 # Install
 
@@ -34,6 +34,9 @@ asdf list-all nats
 
 # Install specific version
 asdf install nats latest
+
+# Install with an architecture override (e.g., x86_64 on arm64 using macOS Rosetta 2)
+ASDF_NATS_ARCH=x64_64 asdf install nats 2.0.0
 
 # Set a version globally (on your ~/.tool-versions file)
 asdf global nats latest
